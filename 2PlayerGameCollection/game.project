@@ -14,7 +14,7 @@ input_method = HiddenInputField
 
 [project]
 title = 2PlayerGameCollection
-version = 0.01
+version = 0.02
 developer = Gideor
 dependencies#0 = https://github.com/britzl/defold-orthographic/archive/master.zip
 
