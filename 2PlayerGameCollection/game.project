@@ -1,5 +1,6 @@
 [bootstrap]
-main_collection = /main/main.collectionc
+main_collection = /main/collections/main.collectionc
+render = /orthographic/render/orthographic.renderc
 
 [script]
 shared_state = 1
@@ -8,6 +9,7 @@ shared_state = 1
 width = 1280
 height = 720
 dynamic_orientation = 1
+display_profiles = /builtins/render/default.display_profilesc
 
 [android]
 input_method = HiddenInputField

@@ -1,0 +1,31 @@
+images {
+  image: "/assets/gfx_files/background_panel_beige.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_brown.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_brown_O.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_brown_X.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_grey.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_grey_X.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_white.png"
+}
+images {
+  image: "/assets/gfx_files/Tile_white_O.png"
+}
+images {
+  image: "/assets/gfx_files/Tiles/Tile_grey_O.png"
+}
+images {
+  image: "/assets/gfx_files/Tiles/Tile_white_X.png"
+}
+extrude_borders: 2
