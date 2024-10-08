@@ -1,0 +1,39 @@
+
+local events = require("main.modules.events")
+local grid_mod = require("main.modules.grid")
+local globals = require("main.modules.globals")
+
+local my_path = "tictactoe:/board_cursor#board_cursor"
+
+function init(self)
+	--self.visible = false
+	self.current_controller_mode = nil --
+	msg.post("#","hide_cursor")
+	msg.post("#", "change_color", {color = vmath.vector4(0, 1, 0, 1)})
+	--subscribe for events
+	events.subscribe_to_event("ev_grid_created", my_path)
+	events.subscribe_to_event("ev_change_controller", my_path)
+end
+
+function final(self)
+	--unsubscribe events here
+	events.unsubscribe_event("ev_grid_created", my_path)
+	events.unsubscribe_event("ev_change_controller", my_path)
+end
+
+function on_message(self, message_id, message, sender)
+	--event Handling "ev_" events
+	if message_id == hash("ev_grid_created") then
+		self.grid = message.grid
+		go.set_position(grid_mod.get_position_from_id(self.grid, 0))
+	elseif message_id == hash("ev_change_controller")then 
+		self.current_controller_mode = message.controller
+		if self.current_controller_mode == globals.gamepad or self.current_controller_mode == globals.keyboard then
+			msg.post("#", "show_cursor")
+		end
+	--change visual Behaviors
+	elseif message_id == hash("show_cursor") then msg.post("#sprite", "enable") self.visible = true
+	elseif message_id == hash("hide_cursor") then msg.post("#sprite", "disable") self.visible = false
+	elseif message_id == hash("change_color") then go.set("#sprite", "tint", message.color)
+	end
+end

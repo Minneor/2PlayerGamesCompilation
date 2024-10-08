@@ -28,4 +28,24 @@ images {
 images {
   image: "/assets/gfx_files/Tiles/Tile_white_X.png"
 }
+images {
+  image: "/assets/Cursor.png"
+}
+images {
+  image: "/assets/gfx_files/mouse_cursor.png"
+}
+animations {
+  id: "tile_white"
+  images {
+    image: "/assets/gfx_files/Tiles/Tile_white.png"
+  }
+  images {
+    image: "/assets/gfx_files/Tiles/Tile_white_O.png"
+  }
+  images {
+    image: "/assets/gfx_files/Tiles/Tile_white_X.png"
+  }
+  playback: PLAYBACK_NONE
+  fps: 0
+}
 extrude_borders: 2

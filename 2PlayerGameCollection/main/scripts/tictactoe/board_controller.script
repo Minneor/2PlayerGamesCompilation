@@ -1,0 +1,66 @@
+local events = require "main.modules.events"
+
+go.property("grid_size", vmath.vector3(3, 3, 0))
+go.property("tile_size", vmath.vector3(16, 16, 0))
+go.property("grid_scene_pos",  vmath.vector3(0, 0, 0.5))
+go.property("grid_color", vmath.vector4(0.5, 0.5, 0.5, 1))
+
+local grid_mod =require("main.modules.grid")
+local cam = require("orthographic.camera")
+local anim_cursor = "cursor"
+
+-- region Input Controller Functions
+local function create_board_visuals(self, color)
+	for i = 1, self.grid.grid_size.x  * self.grid.grid_size.y do
+		local position = grid_mod.get_position_from_id(self.grid, i-1)
+		local obj = factory.create("#tiles", position)
+		table.insert(self.board_tiles, obj)
+		local url = msg.url(nil, obj, "sprite")
+		go.set(url, "tint", color)
+	end
+
+	msg.post("#", "grid_created")
+end
+
+local function handle_mouse_touch(self, touch_x, touch_y, sender)
+	local screen = vmath.vector3(touch_x, touch_y, 0)
+	local scene_pos = cam.screen_to_world(nil, screen)
+
+	if grid_mod.is_Point_in_grid(self.grid, scene_pos) == false then
+		print("outside of grid")
+		msg.post(sender, "set_activation_state_on")
+		return
+	end
+	local id = grid_mod.get_id_from_position(self.grid, scene_pos)
+	print(id)
+	local tile_obj = self.board_tiles[id+1]
+	local url = msg.url(nil, tile_obj, "sprite")
+	go.set(url, anim_cursor, 1)
+end
+--#endregion
+
+function init(self)
+	--event adds here
+	events.add_new_event("ev_grid_created")
+	--event subscribe here
+	events.subscribe_to_event("ev_touch_release", "tictactoe:/board#board_controller")
+	self.board_tiles = {}
+	self.grid = grid_mod.create_grid(self.grid_size, self.tile_size, self.grid_scene_pos)
+	create_board_visuals(self, self.grid_color)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("ev_touch_release") then
+		handle_mouse_touch(self, message.touch_x, message.touch_y, sender)
+	elseif message_id == hash("grid_created") then
+		events.push_event("ev_grid_created", {grid = self.grid})
+	end
+end
+
+function final(self)
+	--unsubscribe events here
+	events.unsubscribe_event("ev_touch_release", "tictactoe:/board#board_controller")
+end
+
+
+

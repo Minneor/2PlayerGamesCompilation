@@ -1,0 +1,51 @@
+local events = require ("main.modules.events")
+local globals = require("main.modules.globals")
+
+function set_controller(self, controller)
+	self.current_controller = controller
+end
+
+function init(self)
+	--standard Defold thing
+	msg.post(".", "acquire_input_focus")
+	--event adds here
+	events.add_new_event("ev_touch_release") -- Mouse Button 1 up or screen touching up
+	events.add_new_event("ev_change_controller")
+	--Controller Setup ( Debug )
+	self.is_active = false
+	msg.post("#", "set_controller", {controller = globals.mouse_touch})
+	msg.post("#", "set_activation_state_on")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("set_controller") then 
+		set_controller(self, message.controller) 
+		events.push_event("ev_change_controller", {controller = message.controller})
+	elseif message_id == hash("set_activation_state_on") then self.is_active = true
+	elseif message_id == hash("set_activation_state_off") then self.is_active = false
+	end
+end
+
+function on_input(self, action_id, action)
+	--input_controller deactivated
+	if self.is_active == false then return end
+	--Handle Mouse/Touch Events
+	if self.current_controller == globals.mouse_touch then
+		if action_id == hash("touch") and action.released then
+			msg.post("#", "set_activation_state_off")
+			events.push_event("ev_touch_release", {touch_x = action.x, touch_y = action.y})
+		end
+	end
+	--handle Keyboard events
+	if self.current_controller == globals.keyboard
+	then
+		print("Keyboard_state")
+	end
+	--handle Gamepad events
+	if self.current_controller == globals.gamepad
+	then
+		print("Gamepad_state")
+	end
+end
+
+
